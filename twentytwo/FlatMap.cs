@@ -5,16 +5,31 @@ public class FlatMap
 
     private readonly Dictionary<int, Dictionary<int, MapSection>> map = new Dictionary<int, Dictionary<int, MapSection>>();
 
-    public Dictionary<int, MapSection> FetchLine(int lineNumber)
+    public Dictionary<int, MapSection>? FetchLine(int lineNumber)
     {
 
-        return map[lineNumber];
+        Dictionary<int, MapSection>? line;
+        if (map.TryGetValue(lineNumber, out line))
+        {
+            return line;
+        }
+        return null;
     }
 
     public FlatMap InsertLine(int y, Dictionary<int, MapSection> mapLine)
     {
         map.Add(y, mapLine);
         return this;
+    }
+
+    public MapSection? FetchTile(int x, int y)
+    {
+        var line = FetchLine(y);
+        if (line != null && line.ContainsKey(x))
+        {
+            return line[x];
+        }
+        return null;
     }
 
     public int CalculateCubeMapSize()
