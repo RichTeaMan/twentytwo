@@ -136,6 +136,30 @@ public class CubeFace
         return debug;
     }
 
+    public string GenerateAssertion()
+    {
+
+        List<string> assertions = new List<string>();
+        assertions.Add($"Assert.IsNotNull(graph.Faces[{Id}]);");
+        assertions.Add($"Assert.AreEqual({Id}, graph.Faces[{Id}].Id);");
+        assertions.Add($"Assert.AreEqual({X}, graph.Faces[{Id}].X);");
+        assertions.Add($"Assert.AreEqual({Y}, graph.Faces[{Id}].Y);");
+
+        for (int i = 0; i < Connections.Length; i++)
+        {
+            var connection = Connections[i];
+            if (connection == null)
+            {
+                throw new Exception("Unconnected face, cannot create assertion.");
+            }
+            assertions.Add($"Assert.IsNotNull(graph.Faces[{Id}].Connections[{i}]);");
+            assertions.Add($"Assert.AreEqual({connection.CubeFaceId}, graph.Faces[{Id}].Connections[{i}].CubeFaceId);");
+            assertions.Add($"Assert.AreEqual(Orientation.{connection.Orientation}, graph.Faces[{Id}].Connections[{i}].Orientation);");
+
+        }
+        return string.Join("\n", assertions);
+    }
+
 }
 
 public class CubeMap
@@ -331,35 +355,6 @@ public class CubeMap
 
                 Console.WriteLine($"Connection -> Source {candidate.Source.Id}, Target {candidate.Target.Id}, Direction {candidate.TargetDirection}, Rotation {connection.Orientation}");
                 Console.WriteLine();
-
-
-                if (candidate.Source.Id == 0 && candidate.Target.Id == 1)
-                {
-                    Debug.Assert(Faces[0].Connections[CubeConsts.NORTH_INDEX].CubeFaceId == 1);
-                    Debug.Assert(Faces[0].Connections[CubeConsts.NORTH_INDEX].Orientation == Orientation.TWO_CLOCKWISE);
-                }
-                if (candidate.Source.Id == 0 && candidate.Target.Id == 2)
-                {
-                    Debug.Assert(Faces[0].Connections[CubeConsts.WEST_INDEX].CubeFaceId == 2);
-                    Debug.Assert(Faces[0].Connections[CubeConsts.WEST_INDEX].Orientation == Orientation.ONE_CLOCKWISE);
-                }
-                if (candidate.Source.Id == 0 && candidate.Target.Id == 5)
-                {
-                    Debug.Assert(Faces[0].Connections[CubeConsts.EAST_INDEX].CubeFaceId == 5);
-                    Debug.Assert(Faces[0].Connections[CubeConsts.EAST_INDEX].Orientation == Orientation.TWO_CLOCKWISE);
-                }
-
-                if (candidate.Source.Id == 1 && candidate.Target.Id == 0)
-                {
-                    Debug.Assert(Faces[1].Connections[CubeConsts.NORTH_INDEX].CubeFaceId == 0);
-                    Debug.Assert(Faces[1].Connections[CubeConsts.NORTH_INDEX].Orientation == Orientation.TWO_CLOCKWISE);
-                }
-
-                if (candidate.Source.Id == 2 && candidate.Target.Id == 0)
-                {
-                    Debug.Assert(Faces[2].Connections[CubeConsts.NORTH_INDEX].CubeFaceId == 0);
-                    Debug.Assert(Faces[2].Connections[CubeConsts.NORTH_INDEX].Orientation == Orientation.THREE_CLOCKWISE);
-                }
             }
 
             if (ConnectionCount == oldConnectionCount)

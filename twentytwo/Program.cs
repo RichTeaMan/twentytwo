@@ -20,5 +20,10 @@ public class Program
             Console.WriteLine(face.FetchDebugString());
             Console.WriteLine();
         }
+
+        foreach(var face in graph.Faces) {
+            Console.WriteLine(face.GenerateAssertion());
+            Console.WriteLine();
+        }
     }
 }

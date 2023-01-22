@@ -178,11 +178,233 @@ public class UnitTest1
         var graph = CubeMap.CreateUnconnected(smallFlatMap);
         graph.ConnectEdges();
 
+        Assert.AreEqual(4, graph.Size);
         Assert.AreEqual(6, graph.Faces.Count(f => f != null));
         Assert.AreEqual(24, graph.ConnectionCount);
+
+        Assert.IsNotNull(graph.Faces[0]);
+        Assert.AreEqual(0, graph.Faces[0].Id);
+        Assert.AreEqual(8, graph.Faces[0].X);
+        Assert.AreEqual(0, graph.Faces[0].Y);
+        Assert.IsNotNull(graph.Faces[0].Connections[0]);
+        Assert.AreEqual(1, graph.Faces[0].Connections[0].CubeFaceId);
+        Assert.AreEqual(Orientation.TWO_CLOCKWISE, graph.Faces[0].Connections[0].Orientation);
+        Assert.IsNotNull(graph.Faces[0].Connections[1]);
+        Assert.AreEqual(5, graph.Faces[0].Connections[1].CubeFaceId);
+        Assert.AreEqual(Orientation.TWO_CLOCKWISE, graph.Faces[0].Connections[1].Orientation);
+        Assert.IsNotNull(graph.Faces[0].Connections[2]);
+        Assert.AreEqual(3, graph.Faces[0].Connections[2].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[0].Connections[2].Orientation);
+        Assert.IsNotNull(graph.Faces[0].Connections[3]);
+        Assert.AreEqual(2, graph.Faces[0].Connections[3].CubeFaceId);
+        Assert.AreEqual(Orientation.ONE_CLOCKWISE, graph.Faces[0].Connections[3].Orientation);
+
+        Assert.IsNotNull(graph.Faces[1]);
+        Assert.AreEqual(1, graph.Faces[1].Id);
+        Assert.AreEqual(0, graph.Faces[1].X);
+        Assert.AreEqual(4, graph.Faces[1].Y);
+        Assert.IsNotNull(graph.Faces[1].Connections[0]);
+        Assert.AreEqual(0, graph.Faces[1].Connections[0].CubeFaceId);
+        Assert.AreEqual(Orientation.TWO_CLOCKWISE, graph.Faces[1].Connections[0].Orientation);
+        Assert.IsNotNull(graph.Faces[1].Connections[1]);
+        Assert.AreEqual(2, graph.Faces[1].Connections[1].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[1].Connections[1].Orientation);
+        Assert.IsNotNull(graph.Faces[1].Connections[2]);
+        Assert.AreEqual(4, graph.Faces[1].Connections[2].CubeFaceId);
+        Assert.AreEqual(Orientation.TWO_CLOCKWISE, graph.Faces[1].Connections[2].Orientation);
+        Assert.IsNotNull(graph.Faces[1].Connections[3]);
+        Assert.AreEqual(5, graph.Faces[1].Connections[3].CubeFaceId);
+        Assert.AreEqual(Orientation.THREE_CLOCKWISE, graph.Faces[1].Connections[3].Orientation);
+
+        Assert.IsNotNull(graph.Faces[2]);
+        Assert.AreEqual(2, graph.Faces[2].Id);
+        Assert.AreEqual(4, graph.Faces[2].X);
+        Assert.AreEqual(4, graph.Faces[2].Y);
+        Assert.IsNotNull(graph.Faces[2].Connections[0]);
+        Assert.AreEqual(0, graph.Faces[2].Connections[0].CubeFaceId);
+        Assert.AreEqual(Orientation.THREE_CLOCKWISE, graph.Faces[2].Connections[0].Orientation);
+        Assert.IsNotNull(graph.Faces[2].Connections[1]);
+        Assert.AreEqual(3, graph.Faces[2].Connections[1].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[2].Connections[1].Orientation);
+        Assert.IsNotNull(graph.Faces[2].Connections[2]);
+        Assert.AreEqual(4, graph.Faces[2].Connections[2].CubeFaceId);
+        Assert.AreEqual(Orientation.ONE_CLOCKWISE, graph.Faces[2].Connections[2].Orientation);
+        Assert.IsNotNull(graph.Faces[2].Connections[3]);
+        Assert.AreEqual(1, graph.Faces[2].Connections[3].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[2].Connections[3].Orientation);
+
+        Assert.IsNotNull(graph.Faces[3]);
+        Assert.AreEqual(3, graph.Faces[3].Id);
+        Assert.AreEqual(8, graph.Faces[3].X);
+        Assert.AreEqual(4, graph.Faces[3].Y);
+        Assert.IsNotNull(graph.Faces[3].Connections[0]);
+        Assert.AreEqual(0, graph.Faces[3].Connections[0].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[3].Connections[0].Orientation);
+        Assert.IsNotNull(graph.Faces[3].Connections[1]);
+        Assert.AreEqual(5, graph.Faces[3].Connections[1].CubeFaceId);
+        Assert.AreEqual(Orientation.THREE_CLOCKWISE, graph.Faces[3].Connections[1].Orientation);
+        Assert.IsNotNull(graph.Faces[3].Connections[2]);
+        Assert.AreEqual(4, graph.Faces[3].Connections[2].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[3].Connections[2].Orientation);
+        Assert.IsNotNull(graph.Faces[3].Connections[3]);
+        Assert.AreEqual(2, graph.Faces[3].Connections[3].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[3].Connections[3].Orientation);
+
+        Assert.IsNotNull(graph.Faces[4]);
+        Assert.AreEqual(4, graph.Faces[4].Id);
+        Assert.AreEqual(8, graph.Faces[4].X);
+        Assert.AreEqual(8, graph.Faces[4].Y);
+        Assert.IsNotNull(graph.Faces[4].Connections[0]);
+        Assert.AreEqual(3, graph.Faces[4].Connections[0].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[4].Connections[0].Orientation);
+        Assert.IsNotNull(graph.Faces[4].Connections[1]);
+        Assert.AreEqual(5, graph.Faces[4].Connections[1].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[4].Connections[1].Orientation);
+        Assert.IsNotNull(graph.Faces[4].Connections[2]);
+        Assert.AreEqual(1, graph.Faces[4].Connections[2].CubeFaceId);
+        Assert.AreEqual(Orientation.TWO_CLOCKWISE, graph.Faces[4].Connections[2].Orientation);
+        Assert.IsNotNull(graph.Faces[4].Connections[3]);
+        Assert.AreEqual(2, graph.Faces[4].Connections[3].CubeFaceId);
+        Assert.AreEqual(Orientation.THREE_CLOCKWISE, graph.Faces[4].Connections[3].Orientation);
+
+        Assert.IsNotNull(graph.Faces[5]);
+        Assert.AreEqual(5, graph.Faces[5].Id);
+        Assert.AreEqual(12, graph.Faces[5].X);
+        Assert.AreEqual(8, graph.Faces[5].Y);
+        Assert.IsNotNull(graph.Faces[5].Connections[0]);
+        Assert.AreEqual(3, graph.Faces[5].Connections[0].CubeFaceId);
+        Assert.AreEqual(Orientation.ONE_CLOCKWISE, graph.Faces[5].Connections[0].Orientation);
+        Assert.IsNotNull(graph.Faces[5].Connections[1]);
+        Assert.AreEqual(0, graph.Faces[5].Connections[1].CubeFaceId);
+        Assert.AreEqual(Orientation.TWO_CLOCKWISE, graph.Faces[5].Connections[1].Orientation);
+        Assert.IsNotNull(graph.Faces[5].Connections[2]);
+        Assert.AreEqual(1, graph.Faces[5].Connections[2].CubeFaceId);
+        Assert.AreEqual(Orientation.ONE_CLOCKWISE, graph.Faces[5].Connections[2].Orientation);
+        Assert.IsNotNull(graph.Faces[5].Connections[3]);
+        Assert.AreEqual(4, graph.Faces[5].Connections[3].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[5].Connections[3].Orientation);
     }
 
-    //[TestMethod]
+    [TestMethod]
+    public async Task TestLargeConnectedCube()
+    {
+
+        var twentyTwo = new TwentyTwo();
+
+        var largePuzzle = await twentyTwo.LoadFlatMapFromFilePath(twentyTwo.DataFilePath);
+        var largeFlatMap = largePuzzle.FlatMap;
+
+        var graph = CubeMap.CreateUnconnected(largeFlatMap);
+        graph.ConnectEdges();
+
+        Assert.AreEqual(50, graph.Size);
+        Assert.AreEqual(6, graph.Faces.Count(f => f != null));
+        Assert.AreEqual(24, graph.ConnectionCount);
+
+        Assert.IsNotNull(graph.Faces[0]);
+        Assert.AreEqual(0, graph.Faces[0].Id);
+        Assert.AreEqual(50, graph.Faces[0].X);
+        Assert.AreEqual(0, graph.Faces[0].Y);
+        Assert.IsNotNull(graph.Faces[0].Connections[0]);
+        Assert.AreEqual(5, graph.Faces[0].Connections[0].CubeFaceId);
+        Assert.AreEqual(Orientation.THREE_CLOCKWISE, graph.Faces[0].Connections[0].Orientation);
+        Assert.IsNotNull(graph.Faces[0].Connections[1]);
+        Assert.AreEqual(1, graph.Faces[0].Connections[1].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[0].Connections[1].Orientation);
+        Assert.IsNotNull(graph.Faces[0].Connections[2]);
+        Assert.AreEqual(2, graph.Faces[0].Connections[2].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[0].Connections[2].Orientation);
+        Assert.IsNotNull(graph.Faces[0].Connections[3]);
+        Assert.AreEqual(3, graph.Faces[0].Connections[3].CubeFaceId);
+        Assert.AreEqual(Orientation.TWO_CLOCKWISE, graph.Faces[0].Connections[3].Orientation);
+
+        Assert.IsNotNull(graph.Faces[1]);
+        Assert.AreEqual(1, graph.Faces[1].Id);
+        Assert.AreEqual(100, graph.Faces[1].X);
+        Assert.AreEqual(0, graph.Faces[1].Y);
+        Assert.IsNotNull(graph.Faces[1].Connections[0]);
+        Assert.AreEqual(5, graph.Faces[1].Connections[0].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[1].Connections[0].Orientation);
+        Assert.IsNotNull(graph.Faces[1].Connections[1]);
+        Assert.AreEqual(4, graph.Faces[1].Connections[1].CubeFaceId);
+        Assert.AreEqual(Orientation.TWO_CLOCKWISE, graph.Faces[1].Connections[1].Orientation);
+        Assert.IsNotNull(graph.Faces[1].Connections[2]);
+        Assert.AreEqual(2, graph.Faces[1].Connections[2].CubeFaceId);
+        Assert.AreEqual(Orientation.THREE_CLOCKWISE, graph.Faces[1].Connections[2].Orientation);
+        Assert.IsNotNull(graph.Faces[1].Connections[3]);
+        Assert.AreEqual(0, graph.Faces[1].Connections[3].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[1].Connections[3].Orientation);
+
+        Assert.IsNotNull(graph.Faces[2]);
+        Assert.AreEqual(2, graph.Faces[2].Id);
+        Assert.AreEqual(50, graph.Faces[2].X);
+        Assert.AreEqual(50, graph.Faces[2].Y);
+        Assert.IsNotNull(graph.Faces[2].Connections[0]);
+        Assert.AreEqual(0, graph.Faces[2].Connections[0].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[2].Connections[0].Orientation);
+        Assert.IsNotNull(graph.Faces[2].Connections[1]);
+        Assert.AreEqual(1, graph.Faces[2].Connections[1].CubeFaceId);
+        Assert.AreEqual(Orientation.ONE_CLOCKWISE, graph.Faces[2].Connections[1].Orientation);
+        Assert.IsNotNull(graph.Faces[2].Connections[2]);
+        Assert.AreEqual(4, graph.Faces[2].Connections[2].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[2].Connections[2].Orientation);
+        Assert.IsNotNull(graph.Faces[2].Connections[3]);
+        Assert.AreEqual(3, graph.Faces[2].Connections[3].CubeFaceId);
+        Assert.AreEqual(Orientation.ONE_CLOCKWISE, graph.Faces[2].Connections[3].Orientation);
+
+        Assert.IsNotNull(graph.Faces[3]);
+        Assert.AreEqual(3, graph.Faces[3].Id);
+        Assert.AreEqual(0, graph.Faces[3].X);
+        Assert.AreEqual(100, graph.Faces[3].Y);
+        Assert.IsNotNull(graph.Faces[3].Connections[0]);
+        Assert.AreEqual(2, graph.Faces[3].Connections[0].CubeFaceId);
+        Assert.AreEqual(Orientation.THREE_CLOCKWISE, graph.Faces[3].Connections[0].Orientation);
+        Assert.IsNotNull(graph.Faces[3].Connections[1]);
+        Assert.AreEqual(4, graph.Faces[3].Connections[1].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[3].Connections[1].Orientation);
+        Assert.IsNotNull(graph.Faces[3].Connections[2]);
+        Assert.AreEqual(5, graph.Faces[3].Connections[2].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[3].Connections[2].Orientation);
+        Assert.IsNotNull(graph.Faces[3].Connections[3]);
+        Assert.AreEqual(0, graph.Faces[3].Connections[3].CubeFaceId);
+        Assert.AreEqual(Orientation.TWO_CLOCKWISE, graph.Faces[3].Connections[3].Orientation);
+
+        Assert.IsNotNull(graph.Faces[4]);
+        Assert.AreEqual(4, graph.Faces[4].Id);
+        Assert.AreEqual(50, graph.Faces[4].X);
+        Assert.AreEqual(100, graph.Faces[4].Y);
+        Assert.IsNotNull(graph.Faces[4].Connections[0]);
+        Assert.AreEqual(2, graph.Faces[4].Connections[0].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[4].Connections[0].Orientation);
+        Assert.IsNotNull(graph.Faces[4].Connections[1]);
+        Assert.AreEqual(1, graph.Faces[4].Connections[1].CubeFaceId);
+        Assert.AreEqual(Orientation.TWO_CLOCKWISE, graph.Faces[4].Connections[1].Orientation);
+        Assert.IsNotNull(graph.Faces[4].Connections[2]);
+        Assert.AreEqual(5, graph.Faces[4].Connections[2].CubeFaceId);
+        Assert.AreEqual(Orientation.THREE_CLOCKWISE, graph.Faces[4].Connections[2].Orientation);
+        Assert.IsNotNull(graph.Faces[4].Connections[3]);
+        Assert.AreEqual(3, graph.Faces[4].Connections[3].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[4].Connections[3].Orientation);
+
+        Assert.IsNotNull(graph.Faces[5]);
+        Assert.AreEqual(5, graph.Faces[5].Id);
+        Assert.AreEqual(0, graph.Faces[5].X);
+        Assert.AreEqual(150, graph.Faces[5].Y);
+        Assert.IsNotNull(graph.Faces[5].Connections[0]);
+        Assert.AreEqual(3, graph.Faces[5].Connections[0].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[5].Connections[0].Orientation);
+        Assert.IsNotNull(graph.Faces[5].Connections[1]);
+        Assert.AreEqual(4, graph.Faces[5].Connections[1].CubeFaceId);
+        Assert.AreEqual(Orientation.ONE_CLOCKWISE, graph.Faces[5].Connections[1].Orientation);
+        Assert.IsNotNull(graph.Faces[5].Connections[2]);
+        Assert.AreEqual(1, graph.Faces[5].Connections[2].CubeFaceId);
+        Assert.AreEqual(Orientation.SAME, graph.Faces[5].Connections[2].Orientation);
+        Assert.IsNotNull(graph.Faces[5].Connections[3]);
+        Assert.AreEqual(0, graph.Faces[5].Connections[3].CubeFaceId);
+        Assert.AreEqual(Orientation.ONE_CLOCKWISE, graph.Faces[5].Connections[3].Orientation);
+    }
+
+    [TestMethod]
     public async Task TestConnectedCubeOneIteration()
     {
 
