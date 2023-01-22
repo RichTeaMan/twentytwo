@@ -1,4 +1,4 @@
-﻿namespace TwentyTwo;
+namespace TwentyTwo;
 
 public class TwentyTwo
 {

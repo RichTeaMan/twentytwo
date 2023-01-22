@@ -10,7 +10,7 @@
   <ItemGroup>
     <Content Include="data/*.*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>  
+    </Content>
   </ItemGroup>
 
 </Project>
