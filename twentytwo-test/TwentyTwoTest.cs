@@ -10,7 +10,17 @@ public class UnitTest1
     public async Task TestMethod1()
     {
         var twentyTwo = new TwentyTwo();
-        await twentyTwo.LoadFlatMapFromFilePath(twentyTwo.TestDataFilePath);
+        var flatMap = await twentyTwo.LoadFlatMapFromFilePath(twentyTwo.TestDataFilePath);
+
+        // 10R5L5R10L4R5L5
+        Assert.AreEqual(7, flatMap.Instructions.Length);
+        Assert.AreEqual(new Instruction(10, Turn.NONE), flatMap.Instructions[0]);
+        Assert.AreEqual(new Instruction(5, Turn.RIGHT), flatMap.Instructions[1]);
+        Assert.AreEqual(new Instruction(5, Turn.LEFT), flatMap.Instructions[2]);
+        Assert.AreEqual(new Instruction(10, Turn.RIGHT), flatMap.Instructions[3]);
+        Assert.AreEqual(new Instruction(4, Turn.LEFT), flatMap.Instructions[4]);
+        Assert.AreEqual(new Instruction(5, Turn.RIGHT), flatMap.Instructions[5]);
+        Assert.AreEqual(new Instruction(5, Turn.LEFT), flatMap.Instructions[6]);
     }
 
     [TestMethod]

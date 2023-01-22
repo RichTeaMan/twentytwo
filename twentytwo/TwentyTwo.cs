@@ -21,7 +21,7 @@ public class TwentyTwo
     public async Task<PuzzleInput> LoadFlatMapFromFilePath(string filePath)
     {
         var map = new FlatMap();
-        string instructions = "";
+        var instructions = new List<Instruction>();
 
         var lines = File.ReadLinesAsync(filePath);
         int y = 0;
@@ -34,26 +34,24 @@ public class TwentyTwo
 
             if (line.Contains("L") || line.Contains("R"))
             {
-                instructions = line;
 
-                /*
-                            let directions = line.split_inclusive(&['L', 'R']);
-
-                            for direction in directions {
-                                let steps_str = direction.trim_end_matches(&['L', 'R']);
-                                let steps = steps_str.parse::<i32>().unwrap();
-                                instructions.push(Instruction {
-                                    steps,
-                                    direction: if direction.contains('L') {
-                                        Direction::LEFT
-                                    } else if direction.contains('R') {
-                                        Direction::RIGHT
-                                    } else {
-                                        Direction::NONE
-                                    },
-                                });
-                            }
-                */
+                // stupid hack to include L & R delimiters in the split. I don't care anymore.
+                var directions = line.Replace("L", ",L").Replace("R", ",R").Split(',');
+                foreach (var direction in directions)
+                {
+                    Console.WriteLine(direction);
+                    Turn instructionTurn = Turn.NONE;
+                    if (direction.Contains('L'))
+                    {
+                        instructionTurn = Turn.LEFT;
+                    }
+                    else if (direction.Contains('R'))
+                    {
+                        instructionTurn = Turn.RIGHT;
+                    }
+                    int moves = int.Parse(direction.Trim('L', 'R'));
+                    instructions.Add(new Instruction(moves, instructionTurn));
+                }
 
                 continue;
             }
@@ -81,7 +79,7 @@ public class TwentyTwo
             y++;
         }
 
-        return new PuzzleInput(map, instructions);
+        return new PuzzleInput(map, instructions.ToArray());
 
     }
 }

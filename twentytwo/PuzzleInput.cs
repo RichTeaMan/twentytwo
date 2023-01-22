@@ -1,3 +1,3 @@
 namespace TwentyTwo;
 
-public record PuzzleInput(FlatMap FlatMap, string Instructions);
+public record PuzzleInput(FlatMap FlatMap, Instruction[] Instructions);
