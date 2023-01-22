@@ -95,8 +95,6 @@ public class CubeFace
 {
     public int Id { get; }
 
-    //public Dictionary<Point, MapSection> MapSections = new Dictionary<Point, MapSection>();
-
     public int X { get; }
 
     public int Y { get; }
@@ -208,35 +206,33 @@ public class CubeMap
                 {
                     // check if another face already touches this one
                     // a face can only possibly be left or up
-                    CubeFace? up_face_id_opt = faces.SingleOrDefault(f => f.X == x && f.Y == (y - size));
-                    CubeFace? left_face_id_opt = faces.SingleOrDefault(f => f.X == (x - size) && f.Y == y);
+                    CubeFace? upFace = faces.SingleOrDefault(f => f.X == x && f.Y == (y - size));
+                    CubeFace? leftFace = faces.SingleOrDefault(f => f.X == (x - size) && f.Y == y);
 
                     CubeFace face = new CubeFace(faces.Count, x, y);
                     faces.Add(face);
-                    if (up_face_id_opt != null)
+                    if (upFace != null)
                     {
                         CubeFaceConnection connect = new CubeFaceConnection
                         {
-                            CubeFaceId = up_face_id_opt.Id,
+                            CubeFaceId = upFace.Id,
                             Orientation = Orientation.SAME
                         };
                         face.Connections[CubeConsts.NORTH_INDEX] = connect;
-
-
 
                         CubeFaceConnection partnerConnect = new CubeFaceConnection
                         {
                             CubeFaceId = face.Id,
                             Orientation = Orientation.SAME
                         };
-                        up_face_id_opt.Connections[CubeConsts.SOUTH_INDEX] = partnerConnect;
+                        upFace.Connections[CubeConsts.SOUTH_INDEX] = partnerConnect;
                     }
 
-                    if (left_face_id_opt != null)
+                    if (leftFace != null)
                     {
                         CubeFaceConnection connect = new CubeFaceConnection
                         {
-                            CubeFaceId = left_face_id_opt.Id,
+                            CubeFaceId = leftFace.Id,
                             Orientation = Orientation.SAME
                         };
                         face.Connections[CubeConsts.WEST_INDEX] = connect;
@@ -246,7 +242,7 @@ public class CubeMap
                             CubeFaceId = face.Id,
                             Orientation = Orientation.SAME
                         };
-                        left_face_id_opt.Connections[CubeConsts.EAST_INDEX] = partnerConnect;
+                        leftFace.Connections[CubeConsts.EAST_INDEX] = partnerConnect;
                     }
                 }
             }
@@ -267,7 +263,6 @@ public class CubeMap
         int loopCount = 0;
         while (ConnectionCount < 12 * 2 && loopCount < maxIterations)
         {
-
             int oldConnectionCount = ConnectionCount;
 
             foreach (var face in Faces)
@@ -281,18 +276,6 @@ public class CubeMap
                 List<Candiate> candidates = new List<Candiate>();
                 foreach (var directionIndex in Enumerable.Range(0, 4).Where(i => face.Connections[i] == null))
                 {
-                    // look for tiles with a resolved relative location of [-1, -1] -> [1, 1]. this also means following rotations
-
-                    if (face.Id == 0)
-                    {
-                        Console.WriteLine("huh");
-                    }
-
-                    if (loopCount == 3)
-                    {
-                        Console.WriteLine("almost");
-                    }
-
                     // look for faces next to the missing direction
                     var candiateDirection = directionIndex.NormalDirection();
 
@@ -301,22 +284,19 @@ public class CubeMap
 
                     foreach (var linked in linkedDirections)
                     {
-
-
-
                         var via = Faces[linked.CubeFaceId];
 
                         int resolvedIndex = directionIndex;
                         if (linked.Orientation == Orientation.TWO_CLOCKWISE)
                         {
-                            resolvedIndex = linked.Orientation.Resolve(directionIndex);//.OppositeDirection();
+                            resolvedIndex = linked.Orientation.Resolve(directionIndex);
                         }
                         else if (linked.Orientation != Orientation.SAME)
                         {
                             resolvedIndex = linked.Orientation.Resolve(directionIndex).OppositeDirection();
                         }
 
-                        var target = via.Connections[resolvedIndex]; // direction.rotate(-via.Orientation)
+                        var target = via.Connections[resolvedIndex];
                         if (target != null && face.Id != target.CubeFaceId)
                         {
                             candidates.Add(new Candiate(face, via, linked, target, Faces[target.CubeFaceId], directionIndex));
@@ -326,10 +306,6 @@ public class CubeMap
                 foreach (var c in candidates)
                 {
                     var ids = new[] { c.Source.Id, c.Via.Id, c.Target.Id };
-                    if (ids.Distinct().Count() != 3)
-                    {
-                        Console.WriteLine("ooof");
-                    }
                     Debug.Assert(ids.Distinct().Count() == 3);
                 }
 
@@ -341,14 +317,6 @@ public class CubeMap
                 var candidate = candidates.First();
 
                 Debug.Assert(candidate.Source.Connections[candidate.TargetDirection] == null);
-                if (candidate.Source.Connections.Any(c => c?.CubeFaceId == candidate.Target.Id))
-                {
-                    Console.WriteLine("more sad");
-                }
-                if (candidate.Source.Id == 0)
-                {
-                    Console.WriteLine();
-                }
                 Debug.Assert(!candidate.Source.Connections.Any(c => c?.CubeFaceId == candidate.Target.Id));
                 var connection = new CubeFaceConnection { CubeFaceId = candidate.Target.Id, Orientation = candidate.FetchRotation().Combine(candidate.SourceConnection.Orientation).Combine(candidate.TargetConnection.Orientation) };
                 candidate.Source.Connections[candidate.TargetDirection] = connection;
@@ -371,23 +339,10 @@ public record Candiate(CubeFace Source, CubeFace Via, CubeFaceConnection SourceC
 {
     public Orientation FetchRotation()
     {
-        if (Source.Id == 1 && Target.Id == 0)
-        {
-            Console.WriteLine("watch this");
-        }
-
-
-
-
-        //int dx = Target.X - Via.X;
-        //int dy = Target.Y - Via.Y;
         int dx = 0;
         int dy = 0;
 
         int targetDirection = Via.Connections.Select((e, i) => new { index = i, entity = e }).Where(c => c.entity?.CubeFaceId == Target.Id).Select(e => e.index).Single();
-        //int sourceDirection = Via.Connections.Select((e, i) => new { index = i, entity = e }).Where(c => c.entity?.CubeFaceId == Source.Id).Select(e => e.index).Single();//.OppositeDirection();
-
-
         int sourceDirection = Source.Connections.Select((e, i) => new { index = i, entity = e }).Where(c => c.entity?.CubeFaceId == Via.Id).Select(e => e.index).Single();
 
         if (SourceConnection.Orientation != Orientation.SAME && TargetConnection.Orientation != Orientation.SAME)
@@ -396,7 +351,7 @@ public record Candiate(CubeFace Source, CubeFace Via, CubeFaceConnection SourceC
         }
 
         int resolvedTargetDirection = SourceConnection.Orientation.Resolve(targetDirection);
-        int resolvedSourceDirection = sourceDirection; // SourceConnection.Orientation.Resolve(sourceDirection);
+        int resolvedSourceDirection = sourceDirection;
 
         Console.WriteLine($"    Fetch rotation: Source ID {Source.Id}, Target ID {Target.Id}, Via ID {Via.Id}. TD {targetDirection} RTD {resolvedTargetDirection} | SD {sourceDirection} RSD {resolvedSourceDirection}");
 
@@ -444,7 +399,7 @@ public record Candiate(CubeFace Source, CubeFace Via, CubeFaceConnection SourceC
             orientation = Orientation.THREE_CLOCKWISE;
         }
 
-        if (TargetDirection.IsHorizontal()) // hmmm
+        if (TargetDirection.IsHorizontal())
         {
             if (orientation == Orientation.ONE_CLOCKWISE)
             {
