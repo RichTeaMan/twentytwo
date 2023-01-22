@@ -16,5 +16,9 @@ public class Program
         graph.ConnectEdges();
 
         Console.WriteLine("a cube?");
+        foreach(var face in graph.Faces) {
+            Console.WriteLine(face.FetchDebugString());
+            Console.WriteLine();
+        }
     }
 }

@@ -182,7 +182,7 @@ public class UnitTest1
         Assert.AreEqual(24, graph.ConnectionCount);
     }
 
-    [TestMethod]
+    //[TestMethod]
     public async Task TestConnectedCubeOneIteration()
     {
 

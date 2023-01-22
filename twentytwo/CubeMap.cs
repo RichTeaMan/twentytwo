@@ -118,6 +118,24 @@ public class CubeFace
         Y = y;
     }
 
+    public string FetchDebugString()
+    {
+        string debug = $"CubeFace ID: {Id} X: {X} Y: {Y}";
+        for (int i = 0; i < Connections.Length; i++)
+        {
+            var connection = Connections[i];
+            if (connection == null)
+            {
+                Console.WriteLine($"\n    {i}: null");
+            }
+            else
+            {
+                debug += $"\n    {i}: {connection.CubeFaceId}, {connection.Orientation}";
+            }
+        }
+        return debug;
+    }
+
 }
 
 public class CubeMap
@@ -308,7 +326,12 @@ public class CubeMap
                     Console.WriteLine();
                 }
                 Debug.Assert(!candidate.Source.Connections.Any(c => c?.CubeFaceId == candidate.Target.Id));
-                candidate.Source.Connections[candidate.TargetDirection] = new CubeFaceConnection { CubeFaceId = candidate.Target.Id, Orientation = candidate.FetchRotation().Combine(candidate.SourceConnection.Orientation) };
+                var connection = new CubeFaceConnection { CubeFaceId = candidate.Target.Id, Orientation = candidate.FetchRotation().Combine(candidate.SourceConnection.Orientation).Combine(candidate.TargetConnection.Orientation) };
+                candidate.Source.Connections[candidate.TargetDirection] = connection;
+
+                Console.WriteLine($"Connection -> Source {candidate.Source.Id}, Target {candidate.Target.Id}, Direction {candidate.TargetDirection}, Rotation {connection.Orientation}");
+                Console.WriteLine();
+
 
                 if (candidate.Source.Id == 0 && candidate.Target.Id == 1)
                 {
@@ -359,61 +382,62 @@ public record Candiate(CubeFace Source, CubeFace Via, CubeFaceConnection SourceC
         }
 
 
+
+
         //int dx = Target.X - Via.X;
         //int dy = Target.Y - Via.Y;
         int dx = 0;
         int dy = 0;
 
-        int connectedViaDirection = Via.Connections.Select((e, i) => new { index = i, entity = e }).Where(c => c.entity?.CubeFaceId == Target.Id).Select(e => e.index).Single();
+        int targetDirection = Via.Connections.Select((e, i) => new { index = i, entity = e }).Where(c => c.entity?.CubeFaceId == Target.Id).Select(e => e.index).Single();
+        //int sourceDirection = Via.Connections.Select((e, i) => new { index = i, entity = e }).Where(c => c.entity?.CubeFaceId == Source.Id).Select(e => e.index).Single();//.OppositeDirection();
 
-        switch (connectedViaDirection)
+
+        int sourceDirection = Source.Connections.Select((e, i) => new { index = i, entity = e }).Where(c => c.entity?.CubeFaceId == Via.Id).Select(e => e.index).Single();
+
+        if (SourceConnection.Orientation != Orientation.SAME && TargetConnection.Orientation != Orientation.SAME)
         {
-            case CubeConsts.NORTH_INDEX:
-                dy--;
-                break;
-            case CubeConsts.SOUTH_INDEX:
-                dy++;
-                break;
-            case CubeConsts.EAST_INDEX:
-                dx++;
-                break;
-            case CubeConsts.WEST_INDEX:
-                dx--;
-                break;
+            Console.WriteLine("    Double orientation");
         }
 
-        Debug.Assert(dx >= -1 || dx <= 1, $"dX: {dx}");
-        Debug.Assert(dy >= -1 || dy <= 1, $"dY: {dy}");
-        // do a transform
-        int rotations = SourceConnection.Orientation.Combine(TargetConnection.Orientation).OrientationAsNumber();
-        foreach (var _ in Enumerable.Range(0, rotations))
+        int resolvedTargetDirection = SourceConnection.Orientation.Resolve(targetDirection);
+        int resolvedSourceDirection = sourceDirection; // SourceConnection.Orientation.Resolve(sourceDirection);
+
+        Console.WriteLine($"    Fetch rotation: Source ID {Source.Id}, Target ID {Target.Id}, Via ID {Via.Id}. TD {targetDirection} RTD {resolvedTargetDirection} | SD {sourceDirection} RSD {resolvedSourceDirection}");
+
+        var directions = new[] { resolvedTargetDirection, resolvedSourceDirection };
+
+        foreach (var direction in directions)
         {
-            int tdx = dx;
-            int tdy = dy;
-            dx = -tdy;
-            dy = tdx;
+
+            switch (direction)
+            {
+                case CubeConsts.NORTH_INDEX:
+                    dy--;
+                    break;
+                case CubeConsts.SOUTH_INDEX:
+                    dy++;
+                    break;
+                case CubeConsts.EAST_INDEX:
+                    dx++;
+                    break;
+                case CubeConsts.WEST_INDEX:
+                    dx--;
+                    break;
+            }
         }
 
-        int connectedSourceDirection = Source.Connections.Select((e, i) => new { index = i, entity = e }).Where(c => c.entity?.CubeFaceId == Via.Id).Select(e => e.index).Single();
-        switch (connectedSourceDirection)
+        if (dx == 0 || dx < -1)
         {
-            case CubeConsts.NORTH_INDEX:
-                dy--;
-                break;
-            case CubeConsts.SOUTH_INDEX:
-                dy++;
-                break;
-            case CubeConsts.EAST_INDEX:
-                dx++;
-                break;
-            case CubeConsts.WEST_INDEX:
-                dx--;
-                break;
+            Console.WriteLine("finding rotation error.");
+            Console.WriteLine($"dX: {dx}");
+            Console.WriteLine($"dY: {dy}");
         }
 
-        if (dx == 0)
+        if (true)
         {
-            Console.WriteLine("sad");
+            Console.WriteLine($"    dX: {dx}");
+            Console.WriteLine($"    dY: {dy}");
         }
 
         Debug.Assert(dx == -1 || dx == 1, $"dX: {dx}");
@@ -436,6 +460,7 @@ public record Candiate(CubeFace Source, CubeFace Via, CubeFaceConnection SourceC
                 orientation = Orientation.ONE_CLOCKWISE;
             }
         }
+        Console.WriteLine($"    {orientation}");
         return orientation;
     }
 }
