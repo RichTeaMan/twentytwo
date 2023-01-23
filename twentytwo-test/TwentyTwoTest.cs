@@ -433,4 +433,13 @@ public class TwentyTwoTest
 
         Assert.AreEqual(Orientation.THREE_CLOCKWISE, graph.Faces[3].Connections[CubeConsts.EAST_INDEX].Orientation);
     }
+
+    [TestMethod]
+    public async Task TestCubeNavigate()
+    {
+        var twentyTwo = new TwentyTwo();
+        int score = await twentyTwo.Navigate(twentyTwo.TestDataFilePath);
+
+        Assert.AreEqual(5031, score);
+    }
 }

@@ -254,8 +254,9 @@ public class CubeMap
 
     public CubeFace? FetchFaceAtLocation(int x, int y)
     {
-
-        return Faces.SingleOrDefault(f => f.X == f.Y);
+        return Faces.SingleOrDefault(f =>
+        x >= f.X && x < f.X + Size &&
+        y >= f.Y && y < f.Y + Size);
     }
 
     public void ConnectEdges(int maxIterations = int.MaxValue)
