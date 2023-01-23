@@ -442,4 +442,13 @@ public class TwentyTwoTest
 
         Assert.AreEqual(5031, score);
     }
+
+    [TestMethod]
+    public async Task TestLargeCubeNavigate()
+    {
+        var twentyTwo = new TwentyTwo();
+        int score = await twentyTwo.Navigate(twentyTwo.DataFilePath);
+
+        Assert.AreEqual(189097, score);
+    }
 }

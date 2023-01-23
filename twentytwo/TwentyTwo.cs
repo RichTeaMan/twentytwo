@@ -106,7 +106,6 @@ public class TwentyTwo
 
         foreach (var instruction in puzzleInput.Instructions)
         {
-            // turn ???
             if (instruction.Turn == Turn.LEFT)
             {
                 direction--;
@@ -122,7 +121,6 @@ public class TwentyTwo
 
             foreach (var _ in Enumerable.Range(0, instruction.TilesToMove))
             {
-
                 int newX = x + heading.x;
                 int newY = y + heading.y;
 
@@ -141,9 +139,6 @@ public class TwentyTwo
                     int preRotX = newX - face.X;
                     int preRotY = newY - face.Y;
 
-                    // DEAL WITH MIRRORS!!!!!!!
-
-
                     switch (direction)
                     {
                         case CubeConsts.NORTH_INDEX:
@@ -159,36 +154,35 @@ public class TwentyTwo
                             preRotX = 0;
                             break;
                     }
-                    //Console.WriteLine($"Direction {direction} | ({x}, {y}) -> ({newX}, {newY})");
-                    //Console.WriteLine($"Face {face.Id} X ({newX} - {face.X}) PreRotX: {preRotX}");
-                    //Console.WriteLine($"Face {face.Id} Y ({newY} - {face.Y}) PreRotY: {preRotY}");
                     Debug.Assert(preRotX >= 0 && preRotX < graph.Size);
                     Debug.Assert(preRotY >= 0 && preRotY < graph.Size);
 
                     int rotX = preRotX;
                     int rotY = preRotY;
+
                     // now do a rotation
-                    foreach (var _i in Enumerable.Range(0, connection.Orientation.OrientationAsNumber()))
+                    foreach (var _i in Enumerable.Range(0, (4 - connection.Orientation.OrientationAsNumber()) % 4))
                     {
                         int tx = rotX;
                         int ty = rotY;
 
-                        rotX = -ty;
+                        rotX = (graph.Size  - 1) - ty;
                         rotY = tx;
                     }
+
+
+                    Console.WriteLine($"Rot: ({rotX}, {rotY})");
+
+                    Debug.Assert(rotX >= 0 && rotX < graph.Size);
+                    Debug.Assert(rotY >= 0 && rotY < graph.Size);
 
                     newX = rotX + newFace.X;
                     newY = rotY + newFace.Y;
 
-                    // change direction
-                    foreach (var _i in Enumerable.Range(0, 4 - connection.Orientation.OrientationAsNumber()))
-                    {
-
-                    }
                     newDirection = (direction + (4 - connection.Orientation.OrientationAsNumber())) % 4;
                     newHeading = CalcHeading(newDirection);
 
-                    Console.WriteLine($"    Maybe moving to face {newFace.Id}. Direction: {newDirection}");
+                    Console.WriteLine($"    Maybe moving to face {newFace.Id}. Direction: {newDirection}. ({x}, {y}) -> ({newX}, {newY})");
                 }
 
                 var tile = flatMap.FetchTile(newX, newY);
@@ -223,7 +217,9 @@ public class TwentyTwo
 
         Console.WriteLine("Complete");
         Console.WriteLine($"Direction: {direction}  ({x}, {y})");
-        return scoreDirection + (4 * x) + (1000 * y);
+        int score = scoreDirection + (4 * (x + 1)) + (1000 * (y + 1));
+        Console.WriteLine($"Score: {score} (5031)");
+        return score;
     }
 
     private Point CalcHeading(int direction)
