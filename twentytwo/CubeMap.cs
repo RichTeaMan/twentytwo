@@ -274,7 +274,7 @@ public class CubeMap
                     continue;
                 }
 
-                List<Candiate> candidates = new List<Candiate>();
+                List<Candidate> candidates = new List<Candidate>();
                 foreach (var directionIndex in Enumerable.Range(0, 4).Where(i => face.Connections[i] == null))
                 {
                     // look for faces next to the missing direction
@@ -300,7 +300,7 @@ public class CubeMap
                         var target = via.Connections[resolvedIndex];
                         if (target != null && face.Id != target.CubeFaceId)
                         {
-                            candidates.Add(new Candiate(face, via, linked, target, Faces[target.CubeFaceId], directionIndex));
+                            candidates.Add(new Candidate(face, via, linked, target, Faces[target.CubeFaceId], directionIndex));
                         }
                     }
                 }
@@ -336,7 +336,7 @@ public class CubeMap
 
 }
 
-public record Candiate(CubeFace Source, CubeFace Via, CubeFaceConnection SourceConnection, CubeFaceConnection TargetConnection, CubeFace Target, int TargetDirection)
+public record Candidate(CubeFace Source, CubeFace Via, CubeFaceConnection SourceConnection, CubeFaceConnection TargetConnection, CubeFace Target, int TargetDirection)
 {
     public Orientation FetchRotation()
     {
