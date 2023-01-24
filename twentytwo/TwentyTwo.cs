@@ -34,7 +34,7 @@ public class TwentyTwo
                 continue;
             }
 
-            if (line.Contains("L") || line.Contains("R"))
+            if (line.Contains('L') || line.Contains('R'))
             {
 
                 // stupid hack to include L & R delimiters in the split. I don't care anymore.
@@ -99,7 +99,6 @@ public class TwentyTwo
         int y = graph.Faces.First().Y;
 
         int direction = CubeConsts.EAST_INDEX;
-        var heading = CalcHeading(direction);
         var face = graph.Faces.First();
 
         Console.WriteLine($"Starting at ({x}, {y})");
@@ -115,7 +114,7 @@ public class TwentyTwo
                 direction++;
             }
             direction = (direction + 4) % 4;
-            heading = CalcHeading(direction);
+            Point? heading = CalcHeading(direction);
 
             Console.WriteLine($"Instruction {instruction.Turn}{instruction.TilesToMove}");
 
@@ -225,14 +224,14 @@ public class TwentyTwo
     private Point CalcHeading(int direction)
     {
 
-        switch ((direction + 4) % 4)
+        return ((direction + 4) % 4) switch
         {
-            case 0: return new Point(0, -1);
-            case 1: return new Point(1, 0);
-            case 2: return new Point(0, 1);
-            case 3: return new Point(-1, 0);
-            default: throw new Exception($"Unknown direction: {direction}.");
-        }
+            0 => new Point(0, -1),
+            1 => new Point(1, 0),
+            2 => new Point(0, 1),
+            3 => new Point(-1, 0),
+            _ => throw new Exception($"Unknown direction: {direction}."),
+        };
     }
 
 }

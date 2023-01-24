@@ -37,16 +37,17 @@ public class TwentyTwoTest
         var p7 = new Point(0, 12);
         var p8 = new Point(100, -50);
 
-        var hashSet = new HashSet<Point>();
-
-        hashSet.Add(p1);
-        hashSet.Add(p2);
-        hashSet.Add(p3);
-        hashSet.Add(p4);
-        hashSet.Add(p5);
-        hashSet.Add(p6);
-        hashSet.Add(p7);
-        hashSet.Add(p8);
+        var hashSet = new HashSet<Point>
+        {
+            p1,
+            p2,
+            p3,
+            p4,
+            p5,
+            p6,
+            p7,
+            p8
+        };
 
         Assert.AreEqual(5, hashSet.Count);
     }

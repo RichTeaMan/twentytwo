@@ -22,16 +22,12 @@ public static class CubeConsts
     public static (int, int) NormalDirection(this int direction)
     {
 
-        switch (direction.WrapDirection())
+        return direction.WrapDirection() switch
         {
-            case NORTH_INDEX:
-            case SOUTH_INDEX:
-                return (WEST_INDEX, EAST_INDEX);
-            case EAST_INDEX:
-            case WEST_INDEX:
-                return (NORTH_INDEX, SOUTH_INDEX);
-            default: throw new ArgumentException($"Unknown direction: {direction}");
-        }
+            NORTH_INDEX or SOUTH_INDEX => (WEST_INDEX, EAST_INDEX),
+            EAST_INDEX or WEST_INDEX => (NORTH_INDEX, SOUTH_INDEX),
+            _ => throw new ArgumentException($"Unknown direction: {direction}"),
+        };
     }
 
     public static int OppositeDirection(this int direction)
@@ -54,26 +50,26 @@ public static class OrientationUtils
     {
         int combined = (a.OrientationAsNumber() + b.OrientationAsNumber()) % 4;
 
-        switch (combined)
+        return combined switch
         {
-            case 0: return Orientation.SAME;
-            case 1: return Orientation.ONE_CLOCKWISE;
-            case 2: return Orientation.TWO_CLOCKWISE;
-            case 3: return Orientation.THREE_CLOCKWISE;
-        }
-        throw new Exception($"Bad orientation number: {combined}.");
+            0 => Orientation.SAME,
+            1 => Orientation.ONE_CLOCKWISE,
+            2 => Orientation.TWO_CLOCKWISE,
+            3 => Orientation.THREE_CLOCKWISE,
+            _ => throw new Exception($"Bad orientation number: {combined}."),
+        };
     }
 
     public static int OrientationAsNumber(this Orientation orientation)
     {
-        switch (orientation)
+        return orientation switch
         {
-            case Orientation.SAME: return 0;
-            case Orientation.ONE_CLOCKWISE: return 1;
-            case Orientation.TWO_CLOCKWISE: return 2;
-            case Orientation.THREE_CLOCKWISE: return 3;
-        }
-        throw new Exception("Unknown orientation.");
+            Orientation.SAME => 0,
+            Orientation.ONE_CLOCKWISE => 1,
+            Orientation.TWO_CLOCKWISE => 2,
+            Orientation.THREE_CLOCKWISE => 3,
+            _ => throw new Exception("Unknown orientation."),
+        };
     }
 
     public static int Resolve(this Orientation orientation, int direction)
@@ -137,11 +133,13 @@ public class CubeFace
     public string GenerateAssertion()
     {
 
-        List<string> assertions = new List<string>();
-        assertions.Add($"Assert.IsNotNull(graph.Faces[{Id}]);");
-        assertions.Add($"Assert.AreEqual({Id}, graph.Faces[{Id}].Id);");
-        assertions.Add($"Assert.AreEqual({X}, graph.Faces[{Id}].X);");
-        assertions.Add($"Assert.AreEqual({Y}, graph.Faces[{Id}].Y);");
+        List<string> assertions = new()
+        {
+            $"Assert.IsNotNull(graph.Faces[{Id}]);",
+            $"Assert.AreEqual({Id}, graph.Faces[{Id}].Id);",
+            $"Assert.AreEqual({X}, graph.Faces[{Id}].X);",
+            $"Assert.AreEqual({Y}, graph.Faces[{Id}].Y);"
+        };
 
         for (int i = 0; i < Connections.Length; i++)
         {
@@ -171,7 +169,7 @@ public class CubeMap
     {
         get
         {
-            return Faces.SelectMany(f => f?.Connections ?? new CubeFaceConnection[0]).Count(c => c != null);
+            return Faces.SelectMany(f => f?.Connections ?? Array.Empty<CubeFaceConnection>()).Count(c => c != null);
         }
     }
 
@@ -209,18 +207,18 @@ public class CubeMap
                     CubeFace? upFace = faces.SingleOrDefault(f => f.X == x && f.Y == (y - size));
                     CubeFace? leftFace = faces.SingleOrDefault(f => f.X == (x - size) && f.Y == y);
 
-                    CubeFace face = new CubeFace(faces.Count, x, y);
+                    CubeFace face = new(faces.Count, x, y);
                     faces.Add(face);
                     if (upFace != null)
                     {
-                        CubeFaceConnection connect = new CubeFaceConnection
+                        CubeFaceConnection connect = new()
                         {
                             CubeFaceId = upFace.Id,
                             Orientation = Orientation.SAME
                         };
                         face.Connections[CubeConsts.NORTH_INDEX] = connect;
 
-                        CubeFaceConnection partnerConnect = new CubeFaceConnection
+                        CubeFaceConnection partnerConnect = new()
                         {
                             CubeFaceId = face.Id,
                             Orientation = Orientation.SAME
@@ -230,14 +228,14 @@ public class CubeMap
 
                     if (leftFace != null)
                     {
-                        CubeFaceConnection connect = new CubeFaceConnection
+                        CubeFaceConnection connect = new()
                         {
                             CubeFaceId = leftFace.Id,
                             Orientation = Orientation.SAME
                         };
                         face.Connections[CubeConsts.WEST_INDEX] = connect;
 
-                        CubeFaceConnection partnerConnect = new CubeFaceConnection
+                        CubeFaceConnection partnerConnect = new()
                         {
                             CubeFaceId = face.Id,
                             Orientation = Orientation.SAME
@@ -248,7 +246,7 @@ public class CubeMap
             }
         }
 
-        CubeMap cubeMap = new CubeMap(size, faces);
+        CubeMap cubeMap = new(size, faces);
         return cubeMap;
     }
 
@@ -274,7 +272,7 @@ public class CubeMap
                     continue;
                 }
 
-                List<Candidate> candidates = new List<Candidate>();
+                List<Candidate> candidates = new();
                 foreach (var directionIndex in Enumerable.Range(0, 4).Where(i => face.Connections[i] == null))
                 {
                     // look for faces next to the missing direction

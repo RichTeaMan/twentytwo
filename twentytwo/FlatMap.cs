@@ -8,8 +8,7 @@ public class FlatMap
     public Dictionary<int, MapSection>? FetchLine(int lineNumber)
     {
 
-        Dictionary<int, MapSection>? line;
-        if (map.TryGetValue(lineNumber, out line))
+        if (map.TryGetValue(lineNumber, out Dictionary<int, MapSection>? line))
         {
             return line;
         }
@@ -25,9 +24,9 @@ public class FlatMap
     public MapSection? FetchTile(int x, int y)
     {
         var line = FetchLine(y);
-        if (line != null && line.ContainsKey(x))
+        if (line != null && line.TryGetValue(x, out MapSection value))
         {
-            return line[x];
+            return value;
         }
         return null;
     }
